@@ -1,5 +1,4 @@
 import { Page, ServiceItem, PortfolioItem } from './types';
-import { Monitor, Cpu, Globe, Smartphone } from 'lucide-react';
 
 export const NAVIGATION_ITEMS = [
   { id: Page.HOME, label: 'INICIO', color: 'bg-indigo-600', hover: 'hover:bg-indigo-500' },
