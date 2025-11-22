@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 interface TiltCardProps {
   children: React.ReactNode;
@@ -9,11 +9,21 @@ interface TiltCardProps {
 
 const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', rotationFactor = 15 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detectar si es dispositivo táctil para desactivar el efecto
+  // Motion values for high-performance animation (bypassing React state)
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth spring physics
+  const mouseX = useSpring(x, { stiffness: 150, damping: 15 });
+  const mouseY = useSpring(y, { stiffness: 150, damping: 15 });
+
+  // Transform mouse position to rotation
+  // Note: RotateX comes from Y movement, RotateY comes from X movement
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [rotationFactor, -rotationFactor]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-rotationFactor, rotationFactor]);
+
   useEffect(() => {
     const checkMobile = () => {
       const isTouch = window.matchMedia("(pointer: coarse)").matches;
@@ -28,20 +38,19 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', rotationF
     const rect = ref.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    
+    // Calculate percentage (-0.5 to 0.5)
+    const xPct = (e.clientX - rect.left) / width - 0.5;
+    const yPct = (e.clientY - rect.top) / height - 0.5;
 
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-
-    setRotateX(yPct * -rotationFactor);
-    setRotateY(xPct * rotationFactor);
+    x.set(xPct);
+    y.set(yPct);
   };
 
   const handleMouseLeave = () => {
     if (isMobile) return;
-    setRotateX(0);
-    setRotateY(0);
+    x.set(0);
+    y.set(0);
   };
 
   return (
@@ -52,22 +61,17 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', rotationF
       onMouseLeave={!isMobile ? handleMouseLeave : undefined}
       style={{
         transformStyle: "preserve-3d",
-      }}
-      animate={{
         rotateX: isMobile ? 0 : rotateX,
         rotateY: isMobile ? 0 : rotateY,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
       }}
     >
       <div 
         style={{ 
           transform: "translateZ(0px)", 
+          transformStyle: "preserve-3d",
           backfaceVisibility: 'hidden',
-          WebkitFontSmoothing: 'antialiased'
+          // Hardware acceleration hint
+          willChange: "transform" 
         }}
         className="h-full w-full"
       >
