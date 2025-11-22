@@ -1,4 +1,4 @@
-import { Page, ServiceItem, PortfolioItem } from './types';
+import { Page, PortfolioItem } from './types';
 
 export const NAVIGATION_ITEMS = [
   { id: Page.HOME, label: 'INICIO', color: 'bg-indigo-600', hover: 'hover:bg-indigo-500' },
