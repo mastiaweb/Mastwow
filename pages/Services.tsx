@@ -1,8 +1,12 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { SERVICES_DATA } from '../constants';
-import { Monitor, Cpu, Globe, Smartphone } from 'lucide-react';
+import { Monitor, Cpu, Globe, Smartphone, Plus } from 'lucide-react';
 import TiltCard from '../components/TiltCard';
+
+interface ServicesProps {
+  setModalData?: (data: any | null) => void;
+}
 
 const IconMap: Record<string, React.ElementType> = {
   monitor: Monitor,
@@ -11,7 +15,7 @@ const IconMap: Record<string, React.ElementType> = {
   smartphone: Smartphone
 };
 
-const Services: React.FC = () => {
+const Services: React.FC<ServicesProps> = ({ setModalData }) => {
   // Variantes de animación para contenedores y items
   const container: Variants = {
     hidden: { opacity: 0 },
@@ -36,6 +40,17 @@ const Services: React.FC = () => {
         stiffness: 50, 
         damping: 20 
       } 
+    }
+  };
+
+  const handleCardClick = (service: any) => {
+    if (setModalData) {
+      // Necesitamos pasar el componente de icono real, no el string
+      const IconComponent = IconMap[service.icon];
+      setModalData({
+        ...service,
+        icon: IconComponent
+      });
     }
   };
 
@@ -72,7 +87,10 @@ const Services: React.FC = () => {
           return (
             <motion.div variants={item} key={idx} className="h-full">
               <TiltCard className="h-full" rotationFactor={8}>
-                <div className="h-full p-8 bg-white border border-gray-200 hover:border-gray-300 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
+                <div 
+                  onClick={() => handleCardClick(service)}
+                  className="h-full p-8 bg-white border border-gray-200 hover:border-fuchsia-200 rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-fuchsia-100/50 transition-all duration-300 group relative overflow-hidden cursor-pointer"
+                >
                   {/* Background Gradient Glow */}
                   <div className={`absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br ${service.color.replace('text-', 'from-')} to-transparent opacity-5 blur-3xl group-hover:opacity-20 transition-opacity duration-500`} />
                   
@@ -89,16 +107,25 @@ const Services: React.FC = () => {
                     </span>
                   </div>
                   
-                  <h3 className="text-2xl md:text-3xl font-bold mb-4 text-slate-900">
+                  <h3 className="text-2xl md:text-3xl font-bold mb-1 text-slate-900">
                     {service.title}
                   </h3>
+                  <p className={`text-xs font-bold uppercase tracking-widest mb-4 ${service.color} opacity-70`}>
+                    {service.subtitle}
+                  </p>
+
                   <p className="text-slate-500 leading-relaxed group-hover:text-slate-700">
                     {service.description}
                   </p>
 
-                  <div className="mt-8 flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                    <span className={service.color}>Saber más</span>
-                    <div className={`h-[2px] w-8 ${service.color.replace('text', 'bg')}`} />
+                  <div className="mt-8 flex items-center justify-between">
+                     <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75">
+                        <span className={service.color}>Ver Detalles</span>
+                        <div className={`h-[2px] w-8 ${service.color.replace('text', 'bg')}`} />
+                     </div>
+                     <div className={`w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-slate-900 group-hover:text-white transition-all duration-300 transform scale-0 group-hover:scale-100`}>
+                        <Plus size={20} />
+                     </div>
                   </div>
                 </div>
               </TiltCard>
