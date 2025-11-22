@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Play, Globe, Server, ShieldCheck, CheckCircle2, Palette, Layout, MousePointer2, Layers, Zap, Activity, Code2, CreditCard, Music, Wifi, Battery, MessageSquare, Users, TrendingUp, Star, Plus, Check, X, Database, Cpu, Rocket, Cloud, Lock, Terminal, Smartphone, Box } from 'lucide-react';
+import { ArrowRight, Play, Globe, Server, ShieldCheck, CheckCircle2, Palette, Layout, MousePointer2, Layers, Zap, Activity, Code2, CreditCard, Music, Wifi, Battery, MessageSquare, Users, TrendingUp, Star, Plus, Check, X, Database, Cloud, Smartphone, Box } from 'lucide-react';
 import { Page } from '../types';
 import TiltCard from '../components/TiltCard';
 
