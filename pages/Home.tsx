@@ -879,37 +879,85 @@ const Home: React.FC<HomeProps> = ({ setPage, setModalData }) => {
                                <stop offset="0%" stopColor="#cbd5e1" stopOpacity="0.2"/>
                                <stop offset="100%" stopColor="#6366f1" stopOpacity="0.8"/>
                            </linearGradient>
+                           <linearGradient id="pulseGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                               <stop offset="0%" stopColor="#fff" stopOpacity="0"/>
+                               <stop offset="50%" stopColor="#06b6d4" stopOpacity="1"/> {/* Cyan Pulse */}
+                               <stop offset="100%" stopColor="#fff" stopOpacity="0"/>
+                           </linearGradient>
                        </defs>
                        
                        {/* Lines connecting top rows to bottom center */}
-                       {/* We can't know exact pixels easily, but we can approximate with percentages since container is relative */}
                        {/* Row 1 (Top) */}
                        {[10, 30, 50, 70, 90].map((x, i) => (
-                           <motion.path 
-                             key={`l1-${i}`}
-                             initial={{ pathLength: 0, opacity: 0 }}
-                             whileInView={{ pathLength: 1, opacity: 1 }}
-                             transition={{ duration: 1.5, delay: i * 0.1 }}
-                             d={`M ${x}% 12% C ${x}% 40%, 50% 50%, 50% 85%`}
-                             fill="none"
-                             stroke="url(#lineGradient)"
-                             strokeWidth="1.5"
-                             vectorEffect="non-scaling-stroke"
-                           />
+                           <React.Fragment key={`l1-${i}`}>
+                             {/* Base Line */}
+                             <motion.path 
+                               initial={{ pathLength: 0, opacity: 0 }}
+                               whileInView={{ pathLength: 1, opacity: 1 }}
+                               transition={{ duration: 1.5, delay: i * 0.1 }}
+                               d={`M ${x}% 12% C ${x}% 40%, 50% 50%, 50% 85%`}
+                               fill="none"
+                               stroke="url(#lineGradient)"
+                               strokeWidth="1.5"
+                               vectorEffect="non-scaling-stroke"
+                             />
+                             {/* Active Pulse Beam */}
+                             <motion.path
+                               d={`M ${x}% 12% C ${x}% 40%, 50% 50%, 50% 85%`}
+                               fill="none"
+                               stroke="url(#pulseGradient)"
+                               strokeWidth="2"
+                               vectorEffect="non-scaling-stroke"
+                               initial={{ pathLength: 0.1, pathOffset: 0, opacity: 0 }}
+                               animate={{ 
+                                 pathOffset: [0, 1],
+                                 opacity: [0, 1, 0]
+                               }}
+                               transition={{
+                                 duration: 2,
+                                 repeat: Infinity,
+                                 ease: "easeInOut",
+                                 delay: i * 0.3,
+                                 repeatDelay: 0.5
+                               }}
+                             />
+                           </React.Fragment>
                        ))}
                         {/* Row 2 (Middle) */}
                        {[10, 30, 50, 70, 90].map((x, i) => (
-                           <motion.path 
-                             key={`l2-${i}`}
-                             initial={{ pathLength: 0, opacity: 0 }}
-                             whileInView={{ pathLength: 1, opacity: 1 }}
-                             transition={{ duration: 1.5, delay: 0.5 + (i * 0.1) }}
-                             d={`M ${x}% 30% C ${x}% 50%, 50% 60%, 50% 85%`}
-                             fill="none"
-                             stroke="url(#lineGradient)"
-                             strokeWidth="1.5"
-                             vectorEffect="non-scaling-stroke"
-                           />
+                           <React.Fragment key={`l2-${i}`}>
+                             {/* Base Line */}
+                             <motion.path 
+                               initial={{ pathLength: 0, opacity: 0 }}
+                               whileInView={{ pathLength: 1, opacity: 1 }}
+                               transition={{ duration: 1.5, delay: 0.5 + (i * 0.1) }}
+                               d={`M ${x}% 30% C ${x}% 50%, 50% 60%, 50% 85%`}
+                               fill="none"
+                               stroke="url(#lineGradient)"
+                               strokeWidth="1.5"
+                               vectorEffect="non-scaling-stroke"
+                             />
+                             {/* Active Pulse Beam */}
+                             <motion.path
+                               d={`M ${x}% 30% C ${x}% 50%, 50% 60%, 50% 85%`}
+                               fill="none"
+                               stroke="url(#pulseGradient)"
+                               strokeWidth="2"
+                               vectorEffect="non-scaling-stroke"
+                               initial={{ pathLength: 0.1, pathOffset: 0, opacity: 0 }}
+                               animate={{ 
+                                 pathOffset: [0, 1],
+                                 opacity: [0, 1, 0]
+                               }}
+                               transition={{
+                                 duration: 2,
+                                 repeat: Infinity,
+                                 ease: "easeInOut",
+                                 delay: 0.5 + (i * 0.3),
+                                 repeatDelay: 0.5
+                               }}
+                             />
+                           </React.Fragment>
                        ))}
                    </svg>
                </div>
@@ -935,7 +983,18 @@ const Home: React.FC<HomeProps> = ({ setPage, setModalData }) => {
                   <motion.div 
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
-                    transition={{ type: "spring", bounce: 0.4, delay: 0.8 }}
+                    animate={{ 
+                      scale: [1, 1.05, 1],
+                      boxShadow: [
+                        "0 25px 50px -12px rgba(79, 70, 229, 0.25)", 
+                        "0 25px 60px -12px rgba(79, 70, 229, 0.6)", 
+                        "0 25px 50px -12px rgba(79, 70, 229, 0.25)"
+                      ]
+                    }}
+                    transition={{ 
+                      scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                      boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                    }}
                     className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-b from-indigo-600 to-purple-700 rounded-3xl shadow-2xl shadow-indigo-300 flex items-center justify-center relative"
                   >
                      <div className="absolute inset-0 bg-white/20 rounded-3xl blur-xl animate-pulse"></div>
@@ -969,9 +1028,9 @@ const Home: React.FC<HomeProps> = ({ setPage, setModalData }) => {
                        "Nuestra plataforma permite a tu equipo colaborar, innovar y dar vida a las ideas, de manera fluida y sin esfuerzo técnico."
                     </p>
                     <div className="flex items-center gap-3">
-                       <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-700">DV</div>
+                       <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-700">GJ</div>
                        <div>
-                          <div className="font-bold text-slate-900 text-sm">Daniel Vaughn</div>
+                          <div className="font-bold text-slate-900 text-sm">Gabriel Jordan</div>
                           <div className="text-xs text-slate-500 uppercase tracking-wider">Founder & CEO</div>
                        </div>
                     </div>
