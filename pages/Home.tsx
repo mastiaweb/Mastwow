@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Play, Globe, Server, ShieldCheck, CheckCircle2, Palette, Layout, MousePointer2, Layers, Zap, Activity, Code2, CreditCard, Music, Wifi, Battery, MessageSquare, Users, TrendingUp, Star, Plus, Check, X, Database, Cloud, Smartphone, Box } from 'lucide-react';
+import { ArrowRight, Play, Globe, Server, ShieldCheck, CheckCircle2, Palette, Layout, MousePointer2, Layers, Zap, Activity, Code2, CreditCard, Music, Wifi, Battery, MessageSquare, Users, TrendingUp, Star, Plus, Check, X, Database, Cloud, Smartphone, Box, Sun, Command, Circle } from 'lucide-react';
 import { Page } from '../types';
 import TiltCard from '../components/TiltCard';
 
 interface HomeProps {
   setPage: (page: Page) => void;
+  setModalData: (data: any | null) => void;
 }
 
 // --- TECH LOGOS (SVG REALES) ---
@@ -54,7 +55,7 @@ const TechLogos = {
   )
 };
 
-const Home: React.FC<HomeProps> = ({ setPage }) => {
+const Home: React.FC<HomeProps> = ({ setPage, setModalData }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   
   const features = [
@@ -66,7 +67,15 @@ const Home: React.FC<HomeProps> = ({ setPage }) => {
       color: "text-blue-600",
       bg: "bg-blue-50",
       gradient: "from-blue-500 to-cyan-400",
-      specs: ["Registro por 1 año", "Configuración DNS", "Protección de privacidad"]
+      specs: ["Registro por 1 año", "Configuración DNS", "Protección de privacidad"],
+      details: {
+        paragraph: "Tu dominio es tu dirección en internet; es la primera impresión que das. Nos encargamos de todo el proceso técnico para que tengas un nombre memorable y profesional, asegurando que tu marca tenga una base sólida en la web desde el primer día.",
+        points: [
+          "Aumenta la credibilidad y el reconocimiento de marca.",
+          "Facilita que tus clientes te encuentren y recuerden.",
+          "Protege tu identidad de marca en el espacio digital."
+        ]
+      }
     },
     {
       title: "Hosting Premium",
@@ -76,7 +85,15 @@ const Home: React.FC<HomeProps> = ({ setPage }) => {
       color: "text-violet-600",
       bg: "bg-violet-50",
       gradient: "from-violet-500 to-fuchsia-400",
-      specs: ["99.9% Uptime", "Discos SSD NVMe", "Ancho de banda ilimitado"]
+      specs: ["99.9% Uptime", "Discos SSD NVMe", "Ancho de banda ilimitado"],
+      details: {
+        paragraph: "Olvídate de las páginas lentas. Nuestro hosting utiliza la tecnología más avanzada (servidores NVMe y una Red de Distribución de Contenido global) para que tu sitio web cargue instantáneamente para cualquier usuario, en cualquier parte del mundo. La velocidad es crucial para la experiencia del usuario y el posicionamiento en Google.",
+        points: [
+          "Mejora drásticamente el ranking en motores de búsqueda (SEO).",
+          "Reduce la tasa de rebote al ofrecer una experiencia fluida.",
+          "Garantiza que tu sitio esté siempre online y disponible."
+        ]
+      }
     },
     {
       title: "Certificado SSL",
@@ -86,7 +103,15 @@ const Home: React.FC<HomeProps> = ({ setPage }) => {
       color: "text-emerald-600",
       bg: "bg-emerald-50",
       gradient: "from-emerald-500 to-teal-400",
-      specs: ["Encriptación 256-bit", "Candado Verde", "Mejora Ranking Google"]
+      specs: ["Encriptación 256-bit", "Candado Verde", "Mejora Ranking Google"],
+      details: {
+        paragraph: "El candado verde en el navegador no es opcional, es una necesidad. Un certificado SSL encripta toda la comunicación entre tu sitio y tus visitantes, protegiendo sus datos y generando confianza. Google también prioriza los sitios seguros en sus resultados de búsqueda.",
+        points: [
+          "Protege la información sensible de tus clientes (formularios, datos personales).",
+          "Genera confianza y demuestra profesionalismo.",
+          "Cumple con los estándares de seguridad modernos de la web."
+        ]
+      }
     }
   ];
 
@@ -205,6 +230,7 @@ const Home: React.FC<HomeProps> = ({ setPage }) => {
   });
 
   return (
+    <>
     <div className="relative w-full min-h-screen flex flex-col items-center pt-28 md:pt-40 pb-24 px-4 md:px-6 overflow-hidden bg-[#f8fafc]">
       
       {/* Background Elements - Optimized with will-change */}
@@ -552,7 +578,8 @@ const Home: React.FC<HomeProps> = ({ setPage }) => {
                key={idx}
                variants={cardVariant}
                whileHover={{ y: -10, transition: { duration: 0.3 } }}
-               className="bg-white rounded-[2rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group"
+               onClick={() => setModalData(feature)}
+               className="bg-white rounded-[2rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group cursor-pointer"
              >
                 {/* Top Gradient Line */}
                 <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${feature.gradient}`} />
@@ -1147,41 +1174,8 @@ const Home: React.FC<HomeProps> = ({ setPage }) => {
       </div>
 
     </div>
+    </>
   );
 };
-
-// Helper Icon Components for Logos
-function Circle({ size, className, ...props }: any) {
-   return (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
-         <circle cx="12" cy="12" r="10"></circle>
-         <circle cx="12" cy="12" r="4"></circle>
-      </svg>
-   )
-}
-
-function Sun({ size, className, ...props }: any) {
-   return (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
-         <circle cx="12" cy="12" r="5"></circle>
-         <line x1="12" y1="1" x2="12" y2="3"></line>
-         <line x1="12" y1="21" x2="12" y2="23"></line>
-         <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-         <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-         <line x1="1" y1="12" x2="3" y2="12"></line>
-         <line x1="21" y1="12" x2="23" y2="12"></line>
-         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-      </svg>
-   )
-}
-
-function Command({ size, className, ...props }: any) {
-   return (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
-         <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3 3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path>
-      </svg>
-   )
-}
 
 export default Home;

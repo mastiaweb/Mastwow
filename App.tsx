@@ -7,9 +7,11 @@ import Work from './pages/Work';
 import Contact from './pages/Contact';
 import { Page } from './types';
 import { MessageCircle } from 'lucide-react';
+import InfoModal from './components/InfoModal';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>(Page.HOME);
+  const [modalData, setModalData] = useState<any | null>(null);
 
   // Optional: Scroll to top on page change
   useEffect(() => {
@@ -19,7 +21,7 @@ const App: React.FC = () => {
   const renderPage = () => {
     switch (currentPage) {
       case Page.HOME:
-        return <Home setPage={setCurrentPage} />;
+        return <Home setPage={setCurrentPage} setModalData={setModalData} />;
       case Page.SERVICES:
         return <Services />;
       case Page.WORK:
@@ -27,7 +29,7 @@ const App: React.FC = () => {
       case Page.CONTACT:
         return <Contact />;
       default:
-        return <Home setPage={setCurrentPage} />;
+        return <Home setPage={setCurrentPage} setModalData={setModalData} />;
     }
   };
 
@@ -113,6 +115,14 @@ const App: React.FC = () => {
       <div className="fixed inset-0 pointer-events-none opacity-[0.3] z-40 mix-blend-multiply hidden md:block" 
            style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }}>
       </div>
+
+      {/* Global Info Modal */}
+      <InfoModal 
+        isOpen={!!modalData} 
+        onClose={() => setModalData(null)} 
+        data={modalData}
+        setPage={setCurrentPage}
+      />
     </div>
   );
 };
