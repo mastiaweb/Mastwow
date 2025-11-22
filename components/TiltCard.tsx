@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 interface TiltCardProps {
@@ -11,9 +11,19 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', rotationF
   const ref = useRef<HTMLDivElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar si es dispositivo táctil para desactivar el efecto
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouch = window.matchMedia("(pointer: coarse)").matches;
+      setIsMobile(isTouch);
+    };
+    checkMobile();
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (isMobile || !ref.current) return;
 
     const rect = ref.current.getBoundingClientRect();
     const width = rect.width;
@@ -29,6 +39,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', rotationF
   };
 
   const handleMouseLeave = () => {
+    if (isMobile) return;
     setRotateX(0);
     setRotateY(0);
   };
@@ -37,14 +48,14 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', rotationF
     <motion.div
       ref={ref}
       className={`perspective-container ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={!isMobile ? handleMouseMove : undefined}
+      onMouseLeave={!isMobile ? handleMouseLeave : undefined}
       style={{
         transformStyle: "preserve-3d",
       }}
       animate={{
-        rotateX,
-        rotateY,
+        rotateX: isMobile ? 0 : rotateX,
+        rotateY: isMobile ? 0 : rotateY,
       }}
       transition={{
         type: "spring",

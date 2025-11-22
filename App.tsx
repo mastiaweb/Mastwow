@@ -76,7 +76,7 @@ const App: React.FC = () => {
 
       {/* Main Content Area */}
       {/* Mobile: pb-24 for bottom nav. Desktop: pt-32 for top nav. No right padding needed anymore. */}
-      <main className="flex-1 pb-24 md:pb-0 md:pt-0 relative z-10 w-full">
+      <main className="flex-1 pb-24 md:pb-0 md:pt-0 relative z-10 w-full transform-gpu">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPage}
@@ -108,8 +108,9 @@ const App: React.FC = () => {
          <MessageCircle size={32} fill="white" className="text-white" />
       </motion.a>
 
-      {/* Global Grain Texture Overlay - Softened for Light Mode */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.3] z-40 mix-blend-multiply" 
+      {/* Global Grain Texture Overlay - HIDDEN ON MOBILE FOR PERFORMANCE */}
+      {/* The mix-blend-multiply is extremely heavy for mobile GPUs on scroll */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.3] z-40 mix-blend-multiply hidden md:block" 
            style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }}>
       </div>
     </div>
